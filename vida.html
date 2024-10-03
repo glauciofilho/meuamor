@@ -51,6 +51,21 @@
             border-radius: 3px;
             cursor: pointer;
         }
+
+        a {
+            display: block; /* Ocupa a largura total */
+            margin-top: 20px; /* Espaço acima do botão */
+            text-align: center;
+            text-decoration: none;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #1976D2; /* Cor de hover */
+        }
     </style>
     <script type="text/javascript"
         src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
@@ -83,6 +98,8 @@
 
         <button type="submit">Enviar</button>
     </form>
+
+    <a href="cantada.html">02/10</a>
 
     <script>
         const formAjuda = document.getElementById('form-ajuda');

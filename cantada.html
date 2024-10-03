@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leticia</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #FFEEEE;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #191970;
+            margin: 0;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            width: 250px;
+            align-items: center;
+            position: relative;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            width: 25%;
+        }
+
+        .sim {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .nao {
+            background-color: #f44336;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #fim {
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fim img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="question" id="question1">
+        <h2>Sabia que eu te amo?</h2>
+        <div class="buttons">
+            <button class="sim" onclick="mostrarProximaPergunta('question1','question2')">Sim</button>
+            <button class="nao" id="nao1" onclick="moverBotaoNao('nao1')">Não</button>
+        </div>
+    </div>
+
+    <div class="question hidden" id="question2">
+        <h2>Sabia que eu sei que voce me ama?</h2>
+        <div class="buttons">
+            <button class="sim" onclick="mostrarProximaPergunta('question2','question3')">Sim</button>
+            <button class="nao" id="nao2" onclick="moverBotaoNao('nao2')">Não</button>
+        </div>
+    </div>
+
+    <div class="question hidden" id="question3">
+        <h2>Esta preparada?</h2>
+        <div class="buttons">
+            <button class="sim" onclick="mostrarProximaPergunta('question3','fim')">Sim</button>
+            <button class="nao" id="nao3" onclick="moverBotaoNao('nao3')">Não</button>
+        </div>
+    </div>
+
+    <div class="question hidden" id="fim">
+        <img id="imagemamor" src="amor.png" alt="Sua imagem de amor">
+        <p>Me chama de resultado e vem ter um caso sério comigo.</p>
+        <audio id="audioamor" src="amor.mp3" controls></audio>
+    </div>
+
+    <script>
+        function mostrarProximaPergunta(id1,id2) {
+            document.getElementById(id1).classList.add('hidden');
+            document.getElementById(id2).classList.remove('hidden');
+            if (id2 == 'fim') {
+                document.getElementById('audioamor').play();
+            }
+        }
+
+        function moverBotaoNao(idBotao) {
+            const naoButton = document.getElementById(idBotao);
+            if (naoButton) {
+                const maxLeft = window.innerWidth - naoButton.offsetWidth;
+                const maxTop = window.innerHeight - naoButton.offsetHeight;
+
+                naoButton.style.position = "absolute";
+                naoButton.style.left = Math.floor(Math.random() * maxLeft - maxLeft/2) + "px";
+                naoButton.style.top = Math.floor(Math.random() * maxTop - maxTop/2) + "px";
+            }
+        }
+    </script>
+
+</body>
+</html>
