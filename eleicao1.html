@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urna Eletrônica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .urna {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #dcdcdc;
+            border-radius: 10px;
+            border: 5px solid #777;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            height: auto;
+        }
+        .display {
+            background-color: white;
+            width: 500px;
+            height: 150px;
+            border: 2px solid black;
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        .input-digito {
+            font-size: 36px;
+            width: 50px;
+            text-align: center;
+        }
+        .candidato {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+        }
+        #imagem {
+            width: 100px;
+            height: 100px;
+            display: none;
+        }
+        #frase {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .teclado {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .teclado button {
+            padding: 20px;
+            font-size: 18px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .teclado button:active {
+            background-color: #888;
+        }
+        .acoes {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            margin-top: 20px;
+        }
+        .acoes button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #corrige { background-color: #f00; }
+        #confirma { background-color: #0a0; }
+        #mensagem-final {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="urna">
+        <h2>REGENTE</h2>
+        <div class="display">
+            <div class="input-container">
+                <input type="text" id="input-digito1" class="input-digito" maxlength="1" oninput="avancarCampo(this, 'input-digito2')" />
+                <input type="text" id="input-digito2" class="input-digito" maxlength="1" oninput="verificarCampos()" />
+            </div>
+            <div class="candidato">
+                <img id="imagem" src="" alt="Candidato" />
+                <p id="frase"></p>
+            </div>
+        </div>
+        <div class="teclado">
+            <button onclick="adicionarDigito('1')">1</button>
+            <button onclick="adicionarDigito('2')">2</button>
+            <button onclick="adicionarDigito('3')">3</button>
+            <button onclick="adicionarDigito('4')">4</button>
+            <button onclick="adicionarDigito('5')">5</button>
+            <button onclick="adicionarDigito('6')">6</button>
+            <button onclick="adicionarDigito('7')">7</button>
+            <button onclick="adicionarDigito('8')">8</button>
+            <button onclick="adicionarDigito('9')">9</button>
+            <div></div>
+            <button onclick="adicionarDigito('0')">0</button>
+            <div></div>
+        </div>
+        <div class="acoes">
+            <button id="corrige" onclick="corrige()">CORRIGE</button>
+            <button id="confirma" onclick="confirma()">CONFIRMA</button>
+        </div>
+    </div>
+
+    <div id="mensagem-final" style="display: none;">
+        <h2>Obrigado, mas saiba que você é a candidata que eu elegi para minha vida</h2>
+    </div>
+
+    <script>
+        function avancarCampo(campoAtual, proximoCampoId) {
+            if (campoAtual.value.length === 1) {
+                document.getElementById(proximoCampoId).focus();
+            }
+        }
+
+        function adicionarDigito(digito) {
+            const input1 = document.getElementById('input-digito1');
+            const input2 = document.getElementById('input-digito2');
+
+            if (!input1.value) {
+                input1.value = digito;
+                document.getElementById('input-digito2').focus();
+            } else if (!input2.value) {
+                input2.value = digito;
+                mostrarCandidato();
+            }
+        }
+
+        function verificarCampos() {
+            const input1 = document.getElementById('input-digito1').value;
+            const input2 = document.getElementById('input-digito2').value;
+
+            if (input1 && input2) {
+                mostrarCandidato();
+            }
+        }
+
+        function corrige() {
+            document.getElementById('input-digito1').value = '';
+            document.getElementById('input-digito2').value = '';
+            document.getElementById('input-digito1').focus();
+            document.getElementById('imagem').style.display = 'none';
+            document.getElementById('frase').innerText = '';
+        }
+
+        function mostrarCandidato() {
+            const digito1 = document.getElementById('input-digito1').value;
+            const digito2 = document.getElementById('input-digito2').value;
+            const digito = digito1 + digito2;
+
+            fetch('./titulos.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data[digito]) {
+                        // Se o candidato existe no JSON
+                        document.getElementById('imagem').src = `./img/${digito}.png`;
+                        document.getElementById('imagem').style.display = 'block';
+                        document.getElementById('frase').innerText = data[digito];
+                    } else {
+                        // Se o candidato não existe no JSON
+                        document.getElementById('imagem').style.display = 'none';
+                        document.getElementById('frase').innerText = 'Candidato inválido';
+                    }
+                });
+        }
+
+        function confirma() {
+            // Esconde a urna
+            document.querySelector('.urna').style.display = 'none';
+
+            // Exibe a mensagem final
+            document.getElementById('mensagem-final').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
